@@ -36,9 +36,9 @@ async function main() {
     "dbserver",
     "user",
     "website",
-  ]; 
+  ];
   for (const table of tables) {
-    console.log("-- loading table " + table + " ...");
+    console.log(`Backuping table '${table}' ...`);
     await backupTable(table);
   }
   await prisma.$disconnect();

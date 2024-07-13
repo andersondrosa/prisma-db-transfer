@@ -13,16 +13,12 @@ async function restoreTable(tableName) {
   );
 
   while (fs.existsSync(filePath)) {
-    console.log("load.. " + filePath + " ...");
     const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
     for (const record of data) {
       await prisma[tableName].create({ data: record });
     }
     chunkIndex += 500;
-    filePath = path.resolve(
-      __dirname,
-      `dumps/${tableName}_${chunkIndex}.json`
-    );
+    filePath = path.resolve(__dirname, `dumps/${tableName}_${chunkIndex}.json`);
   }
 }
 
@@ -37,6 +33,7 @@ async function main() {
     "website",
   ];
   for (const table of tables) {
+    console.log(`Restoring table '${table}' ...`);
     await restoreTable(table);
   }
   await prisma.$disconnect();
