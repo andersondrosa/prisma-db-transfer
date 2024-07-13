@@ -1,0 +1,153 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  // binaryTargets   = ["native", "rhel-openssl-1.0.x", "windows"]
+  // output          = "./client"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id          Int       @id @unique(map: "user_uniq") @default(autoincrement())
+  name        String?   @db.VarChar(300)
+  email       String?   @db.VarChar(100)
+  pass        String?   @db.VarChar(100)
+  thumb       String?   @db.VarChar(100)
+  active      Int?
+  data        Json?
+  tags        Json?
+  created_at  DateTime? @default(now()) @db.Timestamp(0)
+  modified_at DateTime? @db.Timestamp(0)
+}
+
+model application {
+  id           Int       @id @unique(map: "application_uniq")
+  code         String?   @db.VarChar(8)
+  name         String?   @db.VarChar(300)
+  type         String?   @db.VarChar(12)
+  thumb        String?   @db.VarChar(1000)
+  active       Boolean   @default(false)
+  data         Json?
+  observations String?   @db.Text()
+  user_id      Int?
+  client_id    Int?
+  tags         Json?
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  modified_at  DateTime? @db.Timestamp(0)
+  source       Json?
+  source_id    Int?
+}
+
+model client {
+  id           Int       @id @unique(map: "client_uniq") @default(autoincrement())
+  name         String?   @db.VarChar(300)
+  email        String?   @db.VarChar(100)
+  phone        String?   @db.VarChar(20)
+  cpf          String?   @db.VarChar(20)
+  cnpj         String?   @db.VarChar(20)
+  thumb        String?   @db.VarChar(1000)
+  data         Json?
+  status       String?   @db.VarChar(20)
+  tags         Json?
+  fulltext     String?   @db.Text()
+  observations String?   @db.Text()
+  active       Int?
+  location     Json? // postalcode, state, city, district, address, number, complement
+  contact      Json? // name, email
+  user_id      Int?
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  modified_at  DateTime? @db.Timestamp(0)
+  source       Json?
+}
+
+model dbserver {
+  name         String    @id @unique(map: "dbserver_uniq")
+  label        String?   @db.Text()
+  host         String?   @db.VarChar(200)
+  status       String?   @db.VarChar(20)
+  data         Json?
+  token        String?   @db.VarChar(200)
+  observations String?   @db.Text()
+  user_id      Int?
+  tags         Json?
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  modified_at  DateTime? @db.Timestamp(0)
+}
+
+model database {
+  name         String    @id @unique(map: "db_uniq")
+  model        String?   @db.VarChar(16)
+  status       String?   @db.VarChar(16)
+  server       String?   @db.VarChar(30)
+  db_host      String?   @db.VarChar(200)
+  db_port      Int?
+  db_user      String?   @db.VarChar(200)
+  db_pass      String?   @db.VarChar(200)
+  db_name      String?   @db.VarChar(200)
+  db_url       String?   @db.VarChar(16)
+  data         Json?
+  observations String?   @db.Text()
+  user_id      Int?
+  client_id    Int?
+  app_id       Int?
+  dbserver_id  Int? // remover
+  tags         Json?
+  dbserver     String?   @db.VarChar(100)
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  modified_at  DateTime? @db.Timestamp(0)
+}
+
+model admin {
+  name         String    @id @unique(map: "admin_uniq")
+  repo         String?   @db.VarChar(300)
+  version      String?   @db.VarChar(10)
+  database     String?   @db.VarChar(100)
+  domain       String?   @db.VarChar(300)
+  active       Boolean   @default(false)
+  data         Json?
+  env          Json?
+  observations String?   @db.Text()
+  user_id      Int?
+  client_id    Int?
+  app_id       Int?
+  source_id    Int?
+  source       Json?
+  tags         Json?
+  secret       String?   @db.VarChar(64)
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  modified_at  DateTime? @db.Timestamp(0)
+}
+
+model website {
+  name         String    @id @unique(map: "website_uniq")
+  title        String?   @db.VarChar(300)
+  repo         String?   @db.VarChar(300)
+  version      String?   @db.VarChar(10)
+  domain       String?   @db.VarChar(100)
+  database     String?   @db.VarChar(100)
+  active       Boolean   @default(false)
+  data         Json?
+  env          Json?
+  observations String?   @db.Text()
+  user_id      Int?
+  client_id    Int?
+  app_id       Int?
+  tags         Json?
+  secret       String?   @db.VarChar(64)
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  modified_at  DateTime? @db.Timestamp(0)
+}
+
+// model integration {
+//   name         String    @id @unique(map: "integration_uniq")
+//   active       Boolean   @default(false)
+//   data         Json?
+//   observations String?   @db.Text()
+//   user_id      Int?
+//   client_id    Int?
+//   created_at   DateTime? @default(now()) @db.Timestamp(0)
+//   modified_at  DateTime? @db.Timestamp(0)
+// }
